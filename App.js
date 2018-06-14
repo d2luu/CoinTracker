@@ -10,16 +10,13 @@ import {
   Text,
   View
 } from 'react-native';
+import CoinTracker from './src/component/CoinTracker';
 
 type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to Tracker Coin!
-        </Text>
-      </View>
+      <CoinTracker />
     );
   }
 }

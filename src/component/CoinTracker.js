@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Platform, FlatList } from 'react-native';
+import { View, Text, Platform, FlatList, RefreshControl} from 'react-native';
 import {getCoinsData} from '../networking/getCoinsData';
 import Spinner from 'react-native-loading-spinner-overlay';
 import CoinCard from './CoinCard';
@@ -10,15 +10,25 @@ export default class CoinTracker extends Component {
     this.state = {
       isLoading: true,
       coinData: [],
+      isRefreshing: false,
     }
   }
 
   getData = () => {
+    this.setState({isRefreshing: true});
     getCoinsData()
       .then(coinData => {
         this.setState({
           isLoading: false,
           coinData: coinData,
+          isRefreshing: false,
+        });
+      })
+      .catch((e) => {
+        this.setState({
+          isRefreshing: false,
+          isLoading: false,
+          coinData: []
         });
       })
   };
@@ -57,6 +67,12 @@ export default class CoinTracker extends Component {
             );
           }}
           keyExtractor={(item, index) => index.toString()}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={this.getData}
+            />
+          }
         />
       </View>
     );
